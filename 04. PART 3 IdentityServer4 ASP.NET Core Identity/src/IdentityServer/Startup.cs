@@ -39,7 +39,8 @@ namespace IdentityServer
             var migrationsAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
 
             services.AddDbContext<IdentityDbContext>(options =>
-                options.UseSqlServer(connectionString, sql => sql.MigrationsAssembly(migrationsAssembly))
+                //options.UseSqlServer(connectionString, sql => sql.MigrationsAssembly(migrationsAssembly))
+                options.UseSqlite(connectionString, sql => sql.MigrationsAssembly(migrationsAssembly))
             );
 
             services.AddIdentity<ApplicationUser, IdentityRole>(options =>
@@ -65,14 +66,18 @@ namespace IdentityServer
             })
             .AddConfigurationStore(options =>
             {
-                options.ConfigureDbContext = b => b.UseSqlServer(connectionString, sql => sql.MigrationsAssembly(migrationsAssembly));
+                //options.ConfigureDbContext = b => b.UseSqlServer(connectionString, sql => sql.MigrationsAssembly(migrationsAssembly));
+                options.ConfigureDbContext = b => b.UseSqlite(connectionString, sql => sql.MigrationsAssembly(migrationsAssembly));
             })
             .AddOperationalStore(options =>
             {
-                options.ConfigureDbContext = b => b.UseSqlServer(connectionString, sql => sql.MigrationsAssembly(migrationsAssembly));
+                //options.ConfigureDbContext = b => b.UseSqlServer(connectionString, sql => sql.MigrationsAssembly(migrationsAssembly));
+                options.ConfigureDbContext = b => b.UseSqlite(connectionString, sql => sql.MigrationsAssembly(migrationsAssembly));
                 options.EnableTokenCleanup = true;
             })
             .AddAspNetIdentity<ApplicationUser>();
+
+            services.AddMvc(options => options.EnableEndpointRouting = false);
 
             if (Environment.IsDevelopment())
             {
